@@ -27,14 +27,15 @@ include "./header.php"
     <div class="card_list_wrapper">
         <div class="row mt-4 card_list_inner">
             <?php
-            $entries_sql = "SELECT * FROM `entries` ORDER BY id DESC";
+            $entries_sql = "SELECT * FROM `entries` ORDER BY order_number ASC";
             $entries_result = mysqli_query($con, $entries_sql);
+            $x = 0;
             while ($row = mysqli_fetch_array($entries_result)) {
             ?>
                 <div class="col-4">
                     <div class="card text-light my_id_card shadow position-relative">
                         <span class="remove_me">&times;</span>
-                        <input type="hidden" value="" name="order_number" />
+                        <input type="hidden" value="" name="order_number" id="order_number" />
                         <input type="hidden" value="<?php echo $row['u_id']; ?>" name="unique_id" id="unique_id" />
                         <div class="first_name_wrapper">
                             <span>First name</span>
@@ -47,6 +48,7 @@ include "./header.php"
                     </div>
                 </div>
             <?php
+                $x++;
             }
             ?>
         </div>
@@ -54,13 +56,15 @@ include "./header.php"
 </div>
 
 <script>
+    var number_of_cards = $('.card_list_inner .my_id_card').length;
+
     $(".add_card_btn").click(function() {
         const unique_id = Math.floor(Math.random() * 9999999999);
         $(".card_list_inner").prepend(`
             <div class="col-4">
                 <div class="card text-light my_id_card shadow position-relative">
                 <span class="remove_me">&times;</span>
-                    <input type="hidden" value="" name="order_number" />
+                    <input type="hidden" value="" name="order_number" id="order_number />
                     <input type="hidden" value="` + unique_id + `" name="unique_id" id="unique_id" />
                     <div class="first_name_wrapper">
                         <span>First name</span>
@@ -73,6 +77,7 @@ include "./header.php"
                 </div>
             </div>
         `);
+        number_of_cards++;
     });
 
     function get_data(me) {
@@ -109,13 +114,39 @@ include "./header.php"
         }).done(function(data) {
             if (data == "ok_front" || data == "ok") {
                 me.parent().remove();
+                number_of_cards--;
             }
-        })
+        });
+    })
+
+    $('.my_id_card').click(function() {
+        console.log($(this).find('#order_number').val());
     })
 
     $(document).ready(function() {
         $('.card_list_inner').sortable({
-            revert: true
+            revert: true,
+            update: function(event, ui) {
+                update_sorting();
+            }
         });
     })
+    update_sorting();
+
+    function update_sorting() {
+        for (let i = 0; i < $('.card_list_inner .my_id_card').length; i++) {
+            $($('.card_list_inner .my_id_card #order_number')[i]).val(i + 1);
+            var unique_id = $($('.card_list_inner .my_id_card #unique_id')[i]).val();
+            $.ajax({
+                method: 'POST',
+                url: 'update_order.php',
+                data: {
+                    order_num: i + 1,
+                    unique_id: unique_id,
+                }
+            }).done(function(data) {
+                console.log(data);
+            })
+        }
+    }
 </script>
