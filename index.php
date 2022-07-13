@@ -81,7 +81,7 @@ include "./header.php"
         var lname = $(me).parents('.my_id_card').find('#lname').val();
 
         if (fname != "" && lname != "") {
-            console.log(fname + " , " + lname);
+            // console.log(fname + " , " + lname);
             $.ajax({
                 method: 'POST',
                 url: 'add_card.php',
@@ -91,8 +91,25 @@ include "./header.php"
                     lname: lname
                 }
             }).done(function(data) {
-                console.log(data);
+                // console.log(data);
             })
         }
     }
+
+
+    $('.remove_me').click(function(){
+        var uni_id = $(this).parents('.my_id_card').find('#unique_id').val();
+        var me = $(this);
+        $.ajax({
+            method:"POST",
+            url:"remove_card.php",
+            data:{
+                unique_id:uni_id
+            }
+        }).done(function(data){
+            if(data == "ok_front" || data == "ok"){
+                me.parent().remove();
+            }
+        })
+    })
 </script>
