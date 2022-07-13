@@ -97,19 +97,25 @@ include "./header.php"
     }
 
 
-    $('.remove_me').click(function(){
+    $('.remove_me').click(function() {
         var uni_id = $(this).parents('.my_id_card').find('#unique_id').val();
         var me = $(this);
         $.ajax({
-            method:"POST",
-            url:"remove_card.php",
-            data:{
-                unique_id:uni_id
+            method: "POST",
+            url: "remove_card.php",
+            data: {
+                unique_id: uni_id
             }
-        }).done(function(data){
-            if(data == "ok_front" || data == "ok"){
+        }).done(function(data) {
+            if (data == "ok_front" || data == "ok") {
                 me.parent().remove();
             }
         })
+    })
+
+    $(document).ready(function() {
+        $('.card_list_inner').sortable({
+            revert: true
+        });
     })
 </script>
