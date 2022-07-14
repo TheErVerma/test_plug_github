@@ -23,8 +23,9 @@ include "./header.php"
     }
 
     .title {
-        padding: .375rem .75rem;
-    }
+    padding: .375rem .75rem;
+    cursor: text;
+}
     .first_name_wrapper input{
         display: none;
     }
@@ -45,11 +46,11 @@ include "./header.php"
                         <input type="hidden" value="" name="order_number" id="order_number" />
                         <input type="hidden" value="<?php echo $row['u_id']; ?>" name="unique_id" id="unique_id" />
                         <div class="first_name_wrapper">
-                            <div class="title"><?php echo $row['fname']; ?></div>
+                            <div class="title" tabindex="0"><?php echo $row['fname']; ?></div>
                             <input type="text" name="fname" id="fname" class="bg-dark border-0 text-light form-control" onchange="get_data(this)" value="<?php echo $row['fname']; ?>" />
                         </div>
                         <div class="first_name_wrapper">
-                            <div class="title"><?php echo $row['lname']; ?></div>
+                            <div class="title" tabindex="0"><?php echo $row['lname']; ?></div>
                             <input type="text" name="lname" id="lname" class="bg-dark border-0 text-light form-control" onchange="get_data(this)" value="<?php echo $row['lname']; ?>" />
                         </div>
                     </div>
@@ -63,12 +64,12 @@ include "./header.php"
 </div>
 
 <script>
-    $('.first_name_wrapper .title').dblclick(function(){
+    $('.card_list_inner').on('click focus', '.first_name_wrapper .title', function(){
         $(this).parents(".first_name_wrapper").find("input").show();
         $(this).parents(".first_name_wrapper").find("input").select();
         $(this).hide();
     })
-    $('.first_name_wrapper input').focusout(function(){
+    $('.card_list_inner').on('focusout', '.first_name_wrapper input',function(){
         $(this).parents(".first_name_wrapper").find(".title").show();
         $(this).hide();
     })
@@ -81,7 +82,7 @@ include "./header.php"
             <div class="col-4">
                 <div class="card text-light my_id_card shadow position-relative">
                 <span class="remove_me">&times;</span>
-                    <input type="hidden" value="" name="order_number" id="order_number />
+                    <input type="hidden" value="" name="order_number" id="order_number" />
                     <input type="hidden" value="` + unique_id + `" name="unique_id" id="unique_id" />
                     <div class="first_name_wrapper">
                     <div class="title">First name</div>
