@@ -21,6 +21,13 @@ include "./header.php"
         margin-bottom: 20px;
         border-radius: 10px;
     }
+
+    .title {
+        padding: .375rem .75rem;
+    }
+    .first_name_wrapper input{
+        display: none;
+    }
 </style>
 <div class="container">
     <button class="btn btn-primary add_card_btn">Add Card</button>
@@ -38,11 +45,11 @@ include "./header.php"
                         <input type="hidden" value="" name="order_number" id="order_number" />
                         <input type="hidden" value="<?php echo $row['u_id']; ?>" name="unique_id" id="unique_id" />
                         <div class="first_name_wrapper">
-                            <span>First name</span>
+                            <div class="title"><?php echo $row['fname']; ?></div>
                             <input type="text" name="fname" id="fname" class="bg-dark border-0 text-light form-control" onchange="get_data(this)" value="<?php echo $row['fname']; ?>" />
                         </div>
                         <div class="first_name_wrapper">
-                            <span>Last name</span>
+                            <div class="title"><?php echo $row['lname']; ?></div>
                             <input type="text" name="lname" id="lname" class="bg-dark border-0 text-light form-control" onchange="get_data(this)" value="<?php echo $row['lname']; ?>" />
                         </div>
                     </div>
@@ -56,6 +63,16 @@ include "./header.php"
 </div>
 
 <script>
+    $('.first_name_wrapper .title').dblclick(function(){
+        $(this).parents(".first_name_wrapper").find("input").show();
+        $(this).parents(".first_name_wrapper").find("input").select();
+        $(this).hide();
+    })
+    $('.first_name_wrapper input').focusout(function(){
+        $(this).parents(".first_name_wrapper").find(".title").show();
+        $(this).hide();
+    })
+
     var number_of_cards = $('.card_list_inner .my_id_card').length;
 
     $(".add_card_btn").click(function() {
@@ -67,11 +84,11 @@ include "./header.php"
                     <input type="hidden" value="" name="order_number" id="order_number />
                     <input type="hidden" value="` + unique_id + `" name="unique_id" id="unique_id" />
                     <div class="first_name_wrapper">
-                        <span>First name</span>
+                    <div class="title">First name</div>
                         <input type="text" name="fname" id="fname" class="bg-dark border-0 text-light form-control" onchange="get_data(this)"/>
                     </div>
                     <div class="first_name_wrapper">
-                        <span>Last name</span>
+                    <div class="title">Last name</div>
                         <input type="text" name="lname" id="lname" class="bg-dark border-0 text-light form-control" onchange="get_data(this)"/>
                     </div>
                 </div>
@@ -81,12 +98,13 @@ include "./header.php"
     });
 
     function get_data(me) {
+        $(me).parents(".first_name_wrapper").find(".title").html($(me).val());
         var unique_id = $(me).parents('.my_id_card').find('#unique_id').val();
         var fname = $(me).parents('.my_id_card').find('#fname').val();
         var lname = $(me).parents('.my_id_card').find('#lname').val();
 
         if (fname != "" && lname != "") {
-            // console.log(fname + " , " + lname);
+            console.log(fname + " , " + lname);
             $.ajax({
                 method: 'POST',
                 url: 'add_card.php',
@@ -96,7 +114,7 @@ include "./header.php"
                     lname: lname
                 }
             }).done(function(data) {
-                // console.log(data);
+                console.log(data);
             })
         }
     }

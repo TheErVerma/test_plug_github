@@ -18,7 +18,7 @@ if($row_num <= 0){
         echo "Card not Created";
     }
 }else{
-    $update_sql = "UPDATE `entries` SET `fname`='$fname',`lname`='$lname', `order_number`=$order_num WHERE u_id = '$unique_id'";
+    $update_sql = "UPDATE `entries` SET `fname`='$fname',`lname`='$lname', `order_number`= '$order_num' WHERE u_id = '$unique_id'";
     if(mysqli_query($con, $update_sql)){
         echo "ok";
     }else{
